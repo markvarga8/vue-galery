@@ -25,7 +25,6 @@ export default {
     },
     async filterByText (context, text) {
       try {
-        console.log('vmi')
         const title = []
         const result = await axios.get('https://jsonplaceholder.typicode.com/photos')
         result.data.filter((item) => title.push(item.title))
