@@ -1,16 +1,13 @@
 <template>
   <div align="center">
     <div class="search-wrapper">
-      <b-form-select :value="selected" v-model="selected" :options="options"></b-form-select>
+     <!--  <b-form-select :value="selected" v-model="selected" :options="options"></b-form-select>
       <p>{{options}}</p>
-      <p>{{items[0].albumId}}</p>
-      <input type="text" v-model="search" placeholder="Search title.."/>
-     <model-select :options="options"
-        v-model="item"
-        placeholder="select item">
-      </model-select>
+      <p>{{items[0].albumId}}</p> -->
+      <input type="text" @change="filterByText" v-model="search" placeholder="Search title.."/>
+      <p>list: {{list}}</p>
     </div>
-    <b-row v-if="!selected">
+    <b-row>
       <b-card class="m-3" style="width: 20rem;" v-for="item in items" :key="item.id">
         <b-row>
           <b-col>
@@ -22,7 +19,7 @@
         </b-row>
       </b-card>
     </b-row>
-    <b-row v-if="selected">
+    <!-- <b-row v-if="filterByText">
       <b-card class="m-3" style="width: 20rem;" v-for="item in items" :options="options" :key="item.id">
         <b-row>
           <b-col>
@@ -33,37 +30,33 @@
           </b-col>
         </b-row>
       </b-card>
-    </b-row>
+    </b-row> -->
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { ModelSelect } from 'vue-search-select'
-import 'vue-search-select/dist/VueSearchSelect.css'
 
 export default {
   name: 'Home',
   created () {
-    this.photos()
+    this.$store.dispatch('home/getPhotos')
   },
   data: () => ({
     item: '',
     search: '',
     list: [],
-    selected: null,
+    selected: [],
     options: []
   }),
   computed: mapState({
     items: (state) => state.home.photos
   }),
   methods: {
-    photos () {
-      this.$store.dispatch('home/getPhotos')
+    async filterByText () {
+      await this.$store.dispatch('home/filterByText')
+      this.list = this.$store.state.home.title
     }
-  },
-  components: {
-    ModelSelect
   }
 }
 </script>
